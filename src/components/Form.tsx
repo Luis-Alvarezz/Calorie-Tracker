@@ -1,17 +1,30 @@
-import { useState } from "react"
+import { useState, type Dispatch } from "react"
+import {v4 as uuidv } from 'uuid' 
+
 import categories from "../data/categories"
 import type { Activity } from "../types/types"
+import type { ActivityAction } from "../reducers/activity-reducer"
 
-export default function Form() {
+
+type FormProps = {
+  dispatch: Dispatch<ActivityAction>
+}
+
+const initialState : Activity = {
+  id : uuidv(),
+  category: 1,
+  activityName: '',
+  calories: 0
+}
+
+export default function Form({ dispatch }: FormProps) {
   // const [category, setCategory] = useState('');
   // const [activity, setActivity] = useState('');
   // const [calories, setCalories] = useState(0); // * Todos se relaciona, podemos crear un objeto:
-  const [activity, setActivity] = useState<Activity>({ // * Asignamos TYPE via GENERIC
-    category: 1,
-    activityName: '',
-    calories: 0
-  })
-  
+  const [activity, setActivity] = useState<Activity>( // * Asignamos TYPE via GENERIC
+    initialState
+  )
+
   //  ! Metodo 1. Actualizar el STATE segun el INPUT que se este escribiendo
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
     // console.log('Algo Cambio');
@@ -28,16 +41,31 @@ export default function Form() {
 
   // ! Metodo 2. Validar el formulario
   const isValidActivity = () => {
-    const { activityName, calories} = activity;
+    const { activityName, calories } = activity;
     // console.log(activityName.trim() !== '' && calories > 0);
     return activityName.trim() !== '' && calories > 0; // * trim -> Eliminar espacios en blanco al inicio y al final
   }
 
+  // ! Metodo 3. Submit para enviar datos del Form
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // console.log('Enviando Formlulario...');
+
+    dispatch({ type: 'save-activity', payload: { newActivity: activity } })
+
+    // ? REINICIAMOS FORMULARIO:
+    setActivity({
+      ...initialState,
+      id: uuidv()
+    }
+    )
+  }
+
   return (
-    <form action="" className="space-y-5 bg-white shadow-xl p-10 rounded-lg">
+    <form action="" className="space-y-5 bg-white shadow-xl p-10 rounded-lg" onSubmit={handleSubmit}>
       <div className="grid grid-cols-1 gap-3">
         <label htmlFor="category" className="cursor-pointer">Categoria:</label>
-        <select 
+        <select
           className="border border-slate-300 p-2 rounded-lg w-full bg-white"
           name="category"
           id="category"
@@ -54,33 +82,33 @@ export default function Form() {
 
       <div className="grid grid-cols-1 gap-3">
         <label htmlFor="activityName" className="cursor-pointer">Actividad:</label>
-        <input 
-          className="border border-slate-300 p-2 rounded-lg" 
-          id="activityName" 
-          type="text" 
+        <input
+          className="border border-slate-300 p-2 rounded-lg"
+          id="activityName"
+          type="text"
           placeholder="Ej. Comida, Jugo de Naranja, Ensalada, Pesas, Bicicleta"
           value={activity.activityName} // ! Para settear el valor del INPUT en el STATE
           onChange={handleChange} // ! Para sioncronizar cambios dinamicos del STATE y el SELECT | Equiv al addEventListener('change') en Js
-         />
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-3">
         <label htmlFor="calories" className="cursor-pointer">Calorias:</label>
-        <input 
+        <input
           className="border border-slate-300 p-2 rounded-lg"
-          id="calories" 
-          type="number" 
-          min={0} 
+          id="calories"
+          type="number"
+          min={0}
           placeholder="Calorias. ej. 300 0 500"
           value={activity.calories}
           onChange={handleChange} // * Para sioncronizar cambios dinamicos del STATE y el SELECT
         />
       </div>
 
-      <input 
-        type="submit" 
-        className="bg-gray-800 hover:bg-gray-900 w-full p-2 font-bold uppercase text-white cursor-pointer disabled:opacity-10" 
-        value='Guardar Comida o Guardar Ejercicio'
+      <input
+        type="submit"
+        className="bg-gray-800 hover:bg-gray-900 w-full p-2 font-bold uppercase text-white cursor-pointer disabled:opacity-10"
+        value={activity.category === 1 ? 'Guardar Comida' : 'Guardar Ejercicio'}
         disabled={!isValidActivity()}
       />
     </form>

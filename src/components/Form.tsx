@@ -1,13 +1,15 @@
-import { useState, type Dispatch } from "react"
+import { useState, type Dispatch, useEffect } from "react"
 import {v4 as uuidv } from 'uuid' 
 
 import categories from "../data/categories"
 import type { Activity } from "../types/types"
 import type { ActivityAction } from "../reducers/activity-reducer"
+import type { ActivityState } from "../reducers/activity-reducer"
 
 
 type FormProps = {
-  dispatch: Dispatch<ActivityAction>
+  dispatch: Dispatch<ActivityAction>,
+  state: ActivityState
 }
 
 const initialState : Activity = {
@@ -17,13 +19,23 @@ const initialState : Activity = {
   calories: 0
 }
 
-export default function Form({ dispatch }: FormProps) {
+export default function Form({ dispatch, state }: FormProps) {
   // const [category, setCategory] = useState('');
   // const [activity, setActivity] = useState('');
   // const [calories, setCalories] = useState(0); // * Todos se relaciona, podemos crear un objeto:
   const [activity, setActivity] = useState<Activity>( // * Asignamos TYPE via GENERIC
     initialState
   )
+
+  // ! Metodo 4. Identificar en que momento nuestro STATE tiene un activeID - Para actualizar el formulario con la actividad seleccionada
+  useEffect(() => {
+    if (state.activeId) {
+      // console.log('Ya hay algo en ActiveId')
+      const selectedActivity = state.activities.filter( stateActivity => stateActivity.id === state.activeId )[0] // * POS 0 para retornar ARREGLo
+      setActivity(selectedActivity)
+
+    }
+  }, [state.activeId]) // * ESCUCHAMOS 'activity.id'
 
   //  ! Metodo 1. Actualizar el STATE segun el INPUT que se este escribiendo
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {

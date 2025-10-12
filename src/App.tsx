@@ -1,5 +1,5 @@
 import Form from "./components/Form"
-import { useReducer } from "react";
+import { useReducer, useEffect } from "react";
 import ActivityList from "./components/ActivityList";
 import { activityReducer, initialState } from "./reducers/activity-reducer";
 
@@ -7,6 +7,10 @@ function App() {
   const [state, dispatch] = useReducer(activityReducer, initialState); // * De momento NO ocupamos el STATE
   // * Pero como necesitamos el dispatch y se aplica DESTRUCTURING por posiciones
   // console.log(state)
+
+  useEffect(() => {
+    localStorage.setItem('activities', JSON.stringify(state.activities)) // * Convertimos el array de actividades en una cadena de texto para poder guardarlo en el localStorage
+  }, [state.activities]) // * Escuchamos por 'state.activities' para que se dispare cuando se agregue o elimine una actividad
 
   return (
     <>

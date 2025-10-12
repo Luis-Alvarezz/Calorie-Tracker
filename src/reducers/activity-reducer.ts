@@ -22,10 +22,17 @@ export type ActivityState = { // * 3.- Type de estado inicial, el cual se llama 
   activeId: Activity['id'] // ? Vamos a almacenar el ID de la actividad de la cual se presiona para editar
 }
 
+const localStorageActivities = () : Activity[]=> {
+  const activites = localStorage.getItem('activities') // * obtenemos la variable 'key'
+  return activites ? JSON.parse(activites) : [] // * si tenemos activities, los parseamos a un array de objetos Activity, sino, devolvemos un array vacio
+}
+
 export const initialState : ActivityState = { // * 2.- STATE INICIAL (valor con el que el estado comienza la primera vez)
-  activities: [],
+  // activities: [],
+  activities: localStorageActivities() || [],
   activeId: '' // * Vamos a almacenar el ID de la actividad de la cual se presiona para editar
 }
+
 
 // * 4.- REDUCER                      ESTADO INICIAL               , accion enviada por el dispatch
 export const activityReducer = (state: ActivityState = initialState, action: ActivityAction) => {

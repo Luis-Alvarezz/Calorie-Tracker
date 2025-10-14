@@ -11,11 +11,15 @@ export type ActivityAction =
   type: 'set-activeId', // ? Describe que es lo que está sucediendo.
   payload: { id: Activity['id']  } // ? Pasamos unicamente el ID para settear el evento en el formulario
 } |
-
 {
   type: 'delete-activity',
   payload: { id: Activity['id'] }
 }
+ | 
+{
+  type: 'reset-activities' // ! NO se requiere payload porque NO cambiamos el STATE
+}
+
 
 export type ActivityState = { // * 3.- Type de estado inicial, el cual se llama 'activities' y el del TYPE 'Activity[]'
   activities: Activity[]; // ? Un array de objetos Activity de manera Global
@@ -72,5 +76,15 @@ export const activityReducer = (state: ActivityState = initialState, action: Act
       activeId: ''
     }
   }
+
+  if (action.type === 'reset-activities') {
+    // console.log('Eliminando todos los eventos...')
+    return {
+      activities: [],
+      activeId: '' // * Vamos a almacenar el ID de la actividad de la cual se presiona para editar
+    }
+  }
+
+  
   return state; // * Devolvemos el NUEVO ESTADO, NOOO mutar el estado actual
 }

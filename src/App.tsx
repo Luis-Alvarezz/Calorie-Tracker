@@ -1,11 +1,13 @@
 import Form from "./components/Form"
-import { useReducer, useEffect, useMemo } from "react";
+import {  useEffect, useMemo } from "react";
 import ActivityList from "./components/ActivityList";
-import { activityReducer, initialState } from "./reducers/activity-reducer";
+// import { activityReducer, initialState } from "./reducers/activity-reducer";
 import CalorieTracker from "./components/CalorieTracker";
+import { useActivity } from "./hooks/useActivity";
 
 function App() {
-  const [state, dispatch] = useReducer(activityReducer, initialState); // * De momento NO ocupamos el STATE
+  // const [state, dispatch] = useReducer(activityReducer, initialState); // * De momento NO ocupamos el STATE
+  const { state, dispatch } = useActivity()
   // * Pero como necesitamos el dispatch y se aplica DESTRUCTURING por posiciones
   // console.log(state)
 
@@ -44,7 +46,7 @@ function App() {
       <section className="bg-gray-800 py-10">
         <div className="max-w-4xl mx-auto">
           <CalorieTracker 
-            activities={state.activities}
+            // activities={state.activities}
           />
         </div>
       </section>

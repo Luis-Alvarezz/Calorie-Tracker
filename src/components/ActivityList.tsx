@@ -1,27 +1,26 @@
-import { useMemo } from "react"
-import type { Activity } from "../types/types"
-import categories from "../data/categories"
+// import { useMemo } from "react"
+// import type { Activity } from "../types/types"
+// import categories from "../data/categories"
 import PencilSquareIcon from '@heroicons/react/24/outline/PencilSquareIcon'
-import type { ActivityAction } from "../reducers/activity-reducer"
+// import type { ActivityAction } from "../reducers/activity-reducer"
 import { XCircleIcon } from "@heroicons/react/16/solid"
+import { useActivity } from "../hooks/useActivity"
 
-type ActivitiListProps = {
+// type ActivitiListProps = {
   // * PROP : TYPE
-  activities: Activity[],
-  dispatch: React.Dispatch<ActivityAction>
-}
+//   activities: Activity[],
+//   dispatch: React.Dispatch<ActivityAction>
+// }
 
-export default function ActivityList({ activities, dispatch }: ActivitiListProps) {
+// export default function ActivityList({ activities, dispatch }: ActivitiListProps) {
+export default function ActivityList() {
   // console.log(activities)
-
-  // * useMemo para evitar en las vistas tener los parentesis
-  // categories.log(category), // * primer () es para useMemo, segundo () para el parametro de category | Activity['category'] -> LOOK UP
-  const categoryName = useMemo(() => (category: Activity['category']) => categories.map( cat => cat.id === category ? cat.name : ''), 
-  [activities]) // * Dependencia de activities, asi cuando se agregen mas actividades, se va a ejecutar este codigo para agregar esa nueva actividad
- 
-  const isEmpty = useMemo(() => activities.length === 0 , [activities])
-  // * Usamos useMemo porque asi NO tenemos que mandar a llamar a la funcion, es decir 'isEmpty()' y solamente se ejecuta el codigo cuando cambia 'activies' 
+  const { state, dispatch, categoryName, isEmpty } = useActivity()
+  // console.log(state.activities);
   
+  const { activities } = state  
+
+
   return (
     <>
       <h2 className="text-4xl font-bold text-slate-600 text-center">Comida y Actividades</h2>

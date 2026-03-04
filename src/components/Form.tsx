@@ -1,16 +1,18 @@
-import { useState, type Dispatch, useEffect } from "react"
+// import { useState, type Dispatch, useEffect } from "react"
+import { useState, useEffect } from "react"
 import {v4 as uuidv } from 'uuid' 
 
 import categories from "../data/categories"
 import type { Activity } from "../types/types"
-import type { ActivityAction } from "../reducers/activity-reducer"
-import type { ActivityState } from "../reducers/activity-reducer"
+// import type { ActivityAction } from "../reducers/activity-reducer"
+// import type { ActivityState } from "../reducers/activity-reducer"
+import { useActivity } from "../hooks/useActivity"
 
 
-type FormProps = {
-  dispatch: Dispatch<ActivityAction>,
-  state: ActivityState
-}
+// type FormProps = {
+//   dispatch: Dispatch<ActivityAction>,
+//   state: ActivityState
+// }
 
 const initialState : Activity = {
   id : uuidv(),
@@ -19,13 +21,15 @@ const initialState : Activity = {
   calories: 0
 }
 
-export default function Form({ dispatch, state }: FormProps) {
+// export default function Form({ dispatch, state }: FormProps) {
+export default function Form() {
   // const [category, setCategory] = useState('');
   // const [activity, setActivity] = useState('');
   // const [calories, setCalories] = useState(0); // * Todos se relaciona, podemos crear un objeto:
   const [activity, setActivity] = useState<Activity>( // * Asignamos TYPE via GENERIC
     initialState
   )
+  const {state, dispatch} = useActivity()
 
   // ! Metodo 4. Identificar en que momento nuestro STATE tiene un activeID - Para actualizar el formulario con la actividad seleccionada
   useEffect(() => {
